@@ -1,19 +1,104 @@
-
+"use client"
 import { FaFacebook, FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
 import img from "../../assets/images/rafi.png";
 import "animate.css";
-import { motion } from "framer-motion";
+import { motion, useTime, useTransform } from "framer-motion";
 import './Banner.css'
 import { Button } from "../ui/button";
 import Image from "next/image";
-import TypeWriterEffect from 'react-typewriter-effect';
-
+import Typewriter from 'typewriter-effect';
 const Banner = () => {
+    const time = useTime()
+    const rotate = useTransform(
+        time,
+        [0, 4000], // time in milliseconds
+        [0, 360], // rotation in degrees
+        { clamp: false }
+    )
+
+    const tinyBox = {
+        width: 40,
+        height: 40,
+        backgroundColor: "#a10F88",
+        borderRadius: 5,
+        rotate: useTransform(() => rotate.get() * 2), // 2x speed
+    }
+
+    const smallBox = {
+        width: 80,
+        height: 80,
+        backgroundColor: "#aa0F88",
+        borderRadius: 5,
+        rotate: useTransform(() => rotate.get() * 1.5), // 1.5x speed
+    }
+
+    const box = {
+        width: 100,
+        height: 100,
+        backgroundColor: "#E80F88",
+        borderRadius: 5,
+        rotate,
+    }
+    const layer: React.CSSProperties = {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 20,
+    }
+
+    const boxContainer: React.CSSProperties = {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 50,
+        flexWrap: "wrap",
+    }
     return (
         <div
             id="banner"
             className="container mx-auto px-4 py-8"
         >
+
+            <div style={{ ...layer, filter: "blur(4px)" }}>
+                <div style={{ ...boxContainer, width: 500, gap: 80 }}>
+                    <motion.div style={tinyBox} />
+                    <motion.div style={tinyBox} />
+                    <motion.div style={tinyBox} />
+                    <motion.div style={tinyBox} />
+                    <motion.div style={tinyBox} />
+                    <motion.div style={tinyBox} />
+                    <motion.div style={tinyBox} />
+                    <motion.div style={tinyBox} />
+                    <motion.div style={tinyBox} />
+                    <motion.div style={tinyBox} />
+                    <motion.div style={tinyBox} />
+                    <motion.div style={tinyBox} />
+                    <motion.div style={tinyBox} />
+                    <motion.div style={tinyBox} />
+                    <motion.div style={tinyBox} />
+                    <motion.div style={tinyBox} />
+                </div>
+            </div>
+            <div style={{ ...layer, filter: "blur(2px)" }}>
+                <div style={{ ...boxContainer, width: 300 }}>
+                    <motion.div style={smallBox} />
+                    <motion.div style={smallBox} />
+                    <motion.div style={smallBox} />
+                    <motion.div style={smallBox} />
+                </div>
+            </div>
+            {/* <div style={layer}>
+                <div style={boxContainer}>
+                    <motion.div style={box} />
+                </div>
+            </div> */}
+
+
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center min-h-[50vh]">
 
                 {/* Left Content Section */}
@@ -39,49 +124,50 @@ const Banner = () => {
                             transition={{ duration: 0.8, delay: 0.6 }}
                             className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold text-gray-300"
                         >
-                            <TypeWriterEffect
-                                textStyle={{
-                                    fontFamily: 'Red Hat Display',
-                                    color: '#3F3D56',
-                                    fontWeight: 500,
-                                    fontSize: '1.5em',
+                            <Typewriter
+                                options={{
+                                    strings: ["UI/UX Specialist",
+                                        "React Developer",
+                                        "Frontend Engineer",
+                                        "Web Craftsman",
+                                        "TypeScript Expert",
+                                        "Next.js Specialist",
+                                        "Performance Optimizer",
+                                        "Responsive Design Pro",
+                                        "API Integration Master",
+                                        "Component Library Builder",
+                                        "Mobile-First Developer",
+                                        "Accessibility Advocate"],
+                                    autoStart: true,
+                                    loop: true,
                                 }}
-                                startDelay={2000}
-                                cursorColor="#3F3D56"
-                                multiText={[
-                                    'Hey there, This is a type writer animation package',
-                                    'it consist of two types...',
-                                    'Single text display and multi text display',
-                                    'Fonts can be customized.',
-                                    'The type speed can be customized as well',
-                                ]}
-                                multiTextDelay={1000}
-                                typeSpeed={30}
                             />
+
                         </motion.div>
                     </div>
+
 
                     {/* Social Media Links */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.8 }}
-                        className="flex justify-center lg:justify-start gap-6 text-2xl md:text-3xl"
+                        className="flex justify-center lg:justify-start gap-6 text-2xl md:text-3xl cursor-pointer"
                     >
                         {[
                             { href: "https://www.facebook.com/rafiahmed.rabby.3/", icon: FaFacebook, color: "hover:text-blue-500" },
                             { href: "https://github.com/rafirabby13", icon: FaGithub, color: "hover:text-gray-400" },
                             { href: "https://www.linkedin.com/in/rafi-ahmed-rabby-1669b52b3/", icon: FaLinkedin, color: "hover:text-blue-600" },
                             { href: "https://www.instagram.com/rafiahmedrabby/", icon: FaInstagram, color: "hover:text-pink-500" }
-                        ].map(({ href, icon: Icon, color }, index) => (
+                        ].map(({ href, icon: Icon  }, index) => (
                             <motion.a
                                 key={index}
                                 href={href}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                whileHover={{ scale: 1.2, y: -2 }}
+                                whileHover={{ scale: 1.2, y: -2 ,rotate: 5}}
                                 whileTap={{ scale: 0.95 }}
-                                className={`text-gray-400 ${color} transition-all duration-300 transform hover:shadow-lg`}
+                                className={` text-gray-400 hover:bg-black  cursor-pointer transition-all duration-300 transform hover:shadow-lg hover:drop-shadow-[0_0_10px_rgba(232,15,136,0.7)]`}
                             >
                                 <Icon />
                             </motion.a>
