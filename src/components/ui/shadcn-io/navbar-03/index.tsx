@@ -9,6 +9,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '../../popover';
 import { Button } from '../../button';
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from '../../navigation-menu';
 
+import Signature from '@/components/mini/Signature';
+
 // Simple logo component for the navbar
 const Logo = (props: React.SVGAttributes<SVGElement>) => {
   return (
@@ -147,12 +149,12 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
       <header
         ref={combinedRef}
         className={cn(
-          'sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 md:px-6 [&_*]:no-underline',
+          'sticky top-0 z-50 w-full border-b py-5  backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 md:px-6 [&_*]:no-underline',
           className
         )}
         {...props}
       >
-        <div className="container mx-auto flex h-16 max-w-screen-2xl items-center justify-between gap-4">
+        <div className="container mx-auto flex h-16 max-w-screen-2xl items-center justify-between gap-4 ">
           {/* Left side */}
           <div className="flex items-center gap-2">
             {/* Mobile menu trigger */}
@@ -194,10 +196,11 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                 onClick={(e) => e.preventDefault()}
                 className="flex items-center space-x-2 text-primary hover:text-primary/90 transition-colors cursor-pointer"
               >
-                <div className="text-2xl">
+                {/* <div className="text-2xl">
                   {logo}
-                </div>
-                <span className="hidden font-bold text-xl sm:inline-block">shadcn.io</span>
+                </div> */}
+                {/* <span className={`hidden font-bold text-xl sm:inline-block ${signature.className}`}>{'<R/>'}</span> */}
+                <Signature/>
               </button>
               {/* Navigation menu */}
               {!isMobile && (
