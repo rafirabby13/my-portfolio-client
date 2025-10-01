@@ -10,6 +10,8 @@ import { Button } from '../../button';
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from '../../navigation-menu';
 
 import Signature from '@/components/mini/Signature';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 // Simple logo component for the navbar
 const Logo = (props: React.SVGAttributes<SVGElement>) => {
@@ -69,7 +71,7 @@ const HamburgerIcon = ({ className, ...props }: React.SVGAttributes<SVGElement>)
 
 // Types
 export interface Navbar03NavItem {
-  href?: string;
+  href: string;
   label: string;
   active?: boolean;
 }
@@ -88,10 +90,10 @@ export interface Navbar03Props extends React.HTMLAttributes<HTMLElement> {
 
 // Default navigation links
 const defaultNavigationLinks: Navbar03NavItem[] = [
-  { href: '#', label: 'Home', active: true },
-  { href: '#', label: 'About' },
+  { href: '/', label: 'Home', active: true },
+  { href: 'about', label: 'About' },
   { href: '#', label: 'Blog' },
-  { href: '#', label: 'Skills' },
+  { href: '/skills', label: 'Skills' },
   { href: '#', label: 'Projects' },
   { href: '#', label: 'Dashboard' },
 ];
@@ -115,6 +117,7 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
   ) => {
     const [isMobile, setIsMobile] = useState(false);
     const containerRef = useRef<HTMLElement>(null);
+    const pathname = usePathname();
 
     useEffect(() => {
       const checkWidth = () => {
@@ -200,13 +203,13 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                   {logo}
                 </div> */}
                 {/* <span className={`hidden font-bold text-xl sm:inline-block ${signature.className}`}>{'<R/>'}</span> */}
-                <Signature/>
+                <Signature />
               </button>
               {/* Navigation menu */}
               {!isMobile && (
                 <NavigationMenu className="flex">
                   <NavigationMenuList className="gap-1">
-                    {navigationLinks.map((link, index) => (
+                    {/* {navigationLinks.map((link, index) => (
                       <NavigationMenuItem key={index}>
                         <NavigationMenuLink
                           href={link.href}
@@ -221,7 +224,33 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                           {link.label}
                         </NavigationMenuLink>
                       </NavigationMenuItem>
-                    ))}
+                    ))} */}
+                    {navigationLinks.map((link, index) => {
+                      const isActive = pathname === link.href;
+
+                      return (
+                        <NavigationMenuItem key={index}>
+                          <Link href={link.href} passHref   className={cn(
+                                'group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 cursor-pointer relative',
+                                'before:absolute before:bottom-0 before:left-0 before:right-0 before:h-0.5 before:bg-primary before:scale-x-0 before:transition-transform before:duration-300 hover:before:scale-x-100',
+                                isActive && 'before:scale-x-100 text-primary'
+                              )}> 
+                            {/* <NavigationMenuLink
+
+
+                              className={cn(
+                                'group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 cursor-pointer relative',
+                                'before:absolute before:bottom-0 before:left-0 before:right-0 before:h-0.5 before:bg-primary before:scale-x-0 before:transition-transform before:duration-300 hover:before:scale-x-100',
+                                isActive && 'before:scale-x-100 text-primary'
+                              )}
+                              data-active={isActive}
+                            >
+                            </NavigationMenuLink> */}
+                              <span>      {link.label}</span>
+                          </Link>
+                        </NavigationMenuItem>
+                      );
+                    })}
                   </NavigationMenuList>
                 </NavigationMenu>
               )}

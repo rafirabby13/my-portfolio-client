@@ -11,7 +11,7 @@ const Banner = () => {
     const time = useTime()
     const rotate = useTransform(
         time,
-        [0, 4000], // time in milliseconds
+        [0, 40000], // time in milliseconds
         [0, 360], // rotation in degrees
         { clamp: false }
     )
@@ -21,7 +21,7 @@ const Banner = () => {
         height: 40,
         backgroundColor: "#a10F88",
         borderRadius: 5,
-        rotate: useTransform(() => rotate.get() * 2), // 2x speed
+        rotate: useTransform(() => rotate.get() * 9), // 2x speed
     }
 
     const smallBox = {
@@ -64,7 +64,7 @@ const Banner = () => {
             className="container mx-auto px-4 py-8"
         >
 
-            <div style={{ ...layer, filter: "blur(4px)" }}>
+            <div style={{ ...layer, filter: "blur(4px)" }} className="z-0">
                 <div style={{ ...boxContainer, width: 500, gap: 80 }}>
                     <motion.div style={tinyBox} />
                     <motion.div style={tinyBox} />
@@ -84,7 +84,7 @@ const Banner = () => {
                     <motion.div style={tinyBox} />
                 </div>
             </div>
-            <div style={{ ...layer, filter: "blur(2px)" }}>
+            <div style={{ ...layer, filter: "blur(2px)" }} className="z-0">
                 <div style={{ ...boxContainer, width: 300 }}>
                     <motion.div style={smallBox} />
                     <motion.div style={smallBox} />
@@ -99,7 +99,7 @@ const Banner = () => {
             </div> */}
 
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center min-h-[50vh]">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center min-h-[50vh] z-10">
 
                 {/* Left Content Section */}
                 <motion.div
