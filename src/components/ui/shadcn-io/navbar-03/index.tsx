@@ -94,7 +94,7 @@ const defaultNavigationLinks: Navbar03NavItem[] = [
   { href: 'about', label: 'About' },
   { href: '#', label: 'Blog' },
   { href: '/skills', label: 'Skills' },
-  { href: '#', label: 'Projects' },
+  { href: 'projects', label: 'Projects' },
   { href: '#', label: 'Dashboard' },
 ];
 
