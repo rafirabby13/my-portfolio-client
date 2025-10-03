@@ -230,11 +230,11 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
 
                       return (
                         <NavigationMenuItem key={index}>
-                          <Link href={link.href} passHref   className={cn(
-                                'group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 cursor-pointer relative',
-                                'before:absolute before:bottom-0 before:left-0 before:right-0 before:h-0.5 before:bg-primary before:scale-x-0 before:transition-transform before:duration-300 hover:before:scale-x-100',
-                                isActive && 'before:scale-x-100 text-primary'
-                              )}> 
+                          <Link href={link.href} passHref className={cn(
+                            'group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 cursor-pointer relative',
+                            'before:absolute before:bottom-0 before:left-0 before:right-0 before:h-0.5 before:bg-primary before:scale-x-0 before:transition-transform before:duration-300 hover:before:scale-x-100',
+                            isActive && 'before:scale-x-100 text-primary'
+                          )}>
                             {/* <NavigationMenuLink
 
 
@@ -246,7 +246,7 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                               data-active={isActive}
                             >
                             </NavigationMenuLink> */}
-                              <span>      {link.label}</span>
+                            <span>      {link.label}</span>
                           </Link>
                         </NavigationMenuItem>
                       );
@@ -258,17 +258,16 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
           </div>
           {/* Right side */}
           <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-sm font-medium hover:bg-accent hover:text-accent-foreground"
-              onClick={(e) => {
-                e.preventDefault();
-                if (onSignInClick) onSignInClick();
-              }}
-            >
-              {signInText}
-            </Button>
+            <Link href={'/login'}>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-sm font-medium hover:bg-accent hover:text-accent-foreground"
+             
+              >
+                {signInText}
+              </Button>
+            </Link>
             <Button
               size="sm"
               className="text-sm font-medium px-4 h-9 rounded-md shadow-sm"

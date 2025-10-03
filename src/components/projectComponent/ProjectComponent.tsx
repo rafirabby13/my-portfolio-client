@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useState, useRef } from "react";
-import { motion, useInView, useAnimation } from "framer-motion";
+import { motion,  useAnimation, useInView } from "framer-motion";
 import { FaArrowRight, FaGithub, FaExternalLinkAlt, FaTimes } from "react-icons/fa";
 import { Project } from "@/types/project";
 import Link from "next/link";
@@ -10,10 +10,10 @@ interface ProjectComponentProps {
 }
 const ProjectComponent = ({ projects }: ProjectComponentProps) => {
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-    const [category,] = useState("all");
+
 
     const ref = useRef(null);
-    const isInView = useInView(ref, { once: false, threshold: 0.1 });
+    const isInView = useInView(ref, { once: false });
     const mainControls = useAnimation();
 
     useEffect(() => {
@@ -164,8 +164,9 @@ const ProjectComponent = ({ projects }: ProjectComponentProps) => {
                                     <Image
                                         src={selectedProject.image}
                                         alt={selectedProject.name}
-                                        fill // makes image fill the parent div
-                                        className="object-cover object-center"
+                                        width={1000}
+                                        height={1000}
+                                        // className="object-cover object-center"
                                     />
                                 </div>
 
