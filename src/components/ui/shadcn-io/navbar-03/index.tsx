@@ -1,5 +1,5 @@
 'use client';
-
+import Swal from 'sweetalert2'
 import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useEffect, useState, useRef } from 'react';
@@ -12,6 +12,8 @@ import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuL
 import Signature from '@/components/mini/Signature';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { signOut, useSession } from 'next-auth/react';
+import { Avatar, AvatarFallback } from '../../avatar';
 
 // Simple logo component for the navbar
 const Logo = (props: React.SVGAttributes<SVGElement>) => {
@@ -95,7 +97,7 @@ const defaultNavigationLinks: Navbar03NavItem[] = [
   { href: '#', label: 'Blog' },
   { href: '/skills', label: 'Skills' },
   { href: 'projects', label: 'Projects' },
-  { href: '#', label: 'Dashboard' },
+  { href: '/dashboard', label: 'Dashboard' },
 ];
 
 export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
@@ -119,6 +121,9 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
     const containerRef = useRef<HTMLElement>(null);
     const pathname = usePathname();
 
+    const session = useSession()
+    // console.log(session.data.user)
+
     useEffect(() => {
       const checkWidth = () => {
         if (containerRef.current) {
@@ -138,6 +143,30 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
         resizeObserver.disconnect();
       };
     }, []);
+
+
+    const handleSignout=()=>{
+       Swal.fire({
+      title: "Are you sure?",
+      text: "You will be logged out of your account.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, logout!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        signOut({ callbackUrl: "/" }) // redirects to home after logout
+        Swal.fire({
+          title: "Logged out!",
+          text: "You have been successfully logged out.",
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false,
+        })
+      }
+    })
+    }
 
     // Combine refs
     const combinedRef = React.useCallback((node: HTMLElement | null) => {
@@ -258,17 +287,39 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
           </div>
           {/* Right side */}
           <div className="flex items-center gap-3">
-            <Link href={'/login'}>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-sm font-medium hover:bg-accent hover:text-accent-foreground"
-             
-              >
-                {signInText}
-              </Button>
-            </Link>
-            <Button
+
+
+            {
+              session?.data?.user ?
+                <div className='flex items-center gap-2'>
+                    <Avatar className="h-10 w-10 border-2 border-primary ">
+                      <AvatarFallback>{session?.data?.user?.name?.[0] ?? "U"}</AvatarFallback>
+                    </Avatar>
+                 
+                    <Button
+                      // variant="ghost"
+                      size="sm"
+                      className="text-sm font-medium hover:bg-accent hover:text-accent-foreground"
+                      onClick={handleSignout}
+
+                    >
+                      Logout
+                    </Button>
+            
+                </div>
+                :
+                <Link href={'/login'}>
+                  <Button
+                    // variant="ghost"
+                    size="sm"
+                    className="text-sm font-medium hover:bg-accent hover:text-accent-foreground"
+
+                  >
+                    {signInText}
+                  </Button>
+                </Link>
+            }
+            {/* <Button
               size="sm"
               className="text-sm font-medium px-4 h-9 rounded-md shadow-sm"
               onClick={(e) => {
@@ -277,7 +328,7 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
               }}
             >
               {ctaText}
-            </Button>
+            </Button> */}
           </div>
         </div>
       </header>

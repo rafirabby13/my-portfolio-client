@@ -34,17 +34,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased `}
       >
         {/* <Navbar /> */}
-        <SidebarProvider>
+        {/* <SidebarProvider> */}
 
           <SessionProviderComponent>
 
 
-            {children}
+      
+              {children}
+          
           </SessionProviderComponent>
-        </SidebarProvider>
+        {/* </SidebarProvider> */}
 
 
         {/* <Footer /> */}

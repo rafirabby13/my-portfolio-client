@@ -2,7 +2,7 @@ import Footer from '@/components/shared/Footer'
 import Navbar from '@/components/shared/Navbar'
 import React, { ReactNode } from 'react'
 
-const layout = ({ children }: { children: ReactNode }) => {
+const CommonLayout = ({ children }: { children: ReactNode }) => {
     return (
         <div className="flex flex-col min-h-screen space-y-10">
             <Navbar />
@@ -14,4 +14,4 @@ const layout = ({ children }: { children: ReactNode }) => {
     )
 }
 
-export default layout
+export default CommonLayout

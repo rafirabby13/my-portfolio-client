@@ -1,27 +1,30 @@
 
 
+import { AppSidebar } from '@/components/app-sidebar'
 import Header from '@/components/dashboard/Header'
-import { DashboardSidebar } from '@/components/sidebar/Sidebar'
+import DashboardSidebar from '@/components/sidebar/Sidebar'
 import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
+import { authOptions } from '@/helpers/authOptions'
+import { getServerSession } from 'next-auth'
+import { useSession } from 'next-auth/react'
 import React, { ReactNode } from 'react'
 
-const DashboardLayout = ({ children }: { children: ReactNode }) => {
+const DashboardLayout = async ({ children }: { children: ReactNode }) => {
 
     return (
-        <div className='flex w-full'>
-            <DashboardSidebar />
-            <div className='flex-1'>
-                <div className=' w-full p-6 border-b-2 border-primary flex items-center justify-between'>
+        <div className='flex bg-white w-full'>
+            <div>
+                <DashboardSidebar />
+            </div>
+            <div className='flex flex-col w-full'>
+                {/* <div>
                     <Header />
-                    <div>
-                        <Button>Logout</Button>
-                    </div>
-                </div>
-                <div className='p-4'>
-
+                </div> */}
+                <div className='flex-1 bg-red-900'>
                     {children}
                 </div>
-
             </div>
         </div>
     )
