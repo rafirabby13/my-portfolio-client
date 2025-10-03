@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { FieldValues, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
 import {
@@ -26,7 +26,8 @@ import {
 import { Input } from '@/components/ui/input'
 import { FaGoogle } from 'react-icons/fa'
 import { Separator } from '@/components/ui/separator'
-import { useSession, signIn, signOut } from "next-auth/react"
+import { signIn } from "next-auth/react"
+import { register } from '@/actions/auth'
 
 // import { loginFormSchema } from '@/lib/validation-schemas'
 
@@ -46,9 +47,9 @@ const formSchema = z.object({
         .min(6, { message: "Password must be at least 6 characters long" }),
 });
 export default function Register() {
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<FieldValues>({
         defaultValues: {
+            name: '',
             email: '',
             password: '',
             phone: '',
@@ -56,15 +57,23 @@ export default function Register() {
         },
     })
 
-    async function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: FieldValues) {
         try {
             // Assuming an async login function
-            console.log(values)
-            toast(
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-                </pre>,
-            )
+            const data = {
+                email: values.email,
+                password: values.password,
+                phone: values.phone,
+                name: values.name
+
+            }
+            console.log(data)
+            const response = await register(data)
+            console.log("response......", response)
+            if (response?.id) {
+                toast.success("user created successfully")
+            }
+
         } catch (error) {
             console.error('Form submission error', error)
             toast.error('Failed to submit the form. Please try again.')
@@ -91,10 +100,29 @@ export default function Register() {
                             <div className="grid gap-4">
                                 <FormField
                                     control={form.control}
+                                    name="name"
+                                    render={({ field }) => (
+                                        <FormItem className="grid gap-2">
+                                            <FormLabel>Name</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    id="name"
+                                                    placeholder="johndoe "
+                                                    type="text"
+                                                    autoComplete="name"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
                                     name="email"
                                     render={({ field }) => (
                                         <FormItem className="grid gap-2">
-                                            <FormLabel htmlFor="email">Email</FormLabel>
+                                            <FormLabel >Email</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     id="email"
@@ -113,7 +141,7 @@ export default function Register() {
                                     name="phone"
                                     render={({ field }) => (
                                         <FormItem className="grid gap-2">
-                                            <FormLabel htmlFor="email">Phone</FormLabel>
+                                            <FormLabel >Phone</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     id="phone"
@@ -170,7 +198,7 @@ export default function Register() {
                                     )}
                                 />
                                 <Button type="submit" className="w-full">
-                                    Login
+                                    Register
                                 </Button>
                             </div>
                         </form>

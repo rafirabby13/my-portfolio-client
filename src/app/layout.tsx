@@ -6,6 +6,7 @@ import Footer from "@/components/shared/Footer";
 import { SessionProvider } from "next-auth/react";
 import SessionProviderComponent from "@/providers/SessionProviderComponent";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,13 +40,13 @@ export default function RootLayout({
         {/* <Navbar /> */}
         {/* <SidebarProvider> */}
 
-          <SessionProviderComponent>
+        <SessionProviderComponent>
 
+          <Toaster richColors  position="top-center"/>
 
-      
-              {children}
-          
-          </SessionProviderComponent>
+          {children}
+
+        </SessionProviderComponent>
         {/* </SidebarProvider> */}
 
 

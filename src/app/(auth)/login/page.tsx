@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { FieldValues, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
 import {
@@ -26,7 +26,8 @@ import {
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { FaGoogle } from 'react-icons/fa'
-import {  signIn } from "next-auth/react"
+import { signIn } from "next-auth/react"
+import { login } from '@/actions/auth'
 
 // import { loginFormSchema } from '@/lib/validation-schemas'
 
@@ -41,30 +42,37 @@ const formSchema = z.object({
         .min(6, { message: "Password must be at least 6 characters long" }),
 });
 export default function Login() {
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<FieldValues>({
         defaultValues: {
             email: '',
             password: '',
         },
     })
 
-    async function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: FieldValues) {
         try {
             // Assuming an async login function
-            console.log(values)
-            toast(
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-                </pre>,
-            )
-        } catch (error) {
-            console.error('Form submission error', error)
-            toast.error('Failed to submit the form. Please try again.')
+            const data = {
+                email: values.email,
+                password: values.password
+
+            }
+            console.log(data)
+            const response = await login(data)
+            // console.log("response......", response)
+            if (response?.success) {
+                toast.success("user logged in successfully")
+            }
+      
+          
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            
+            toast.error('Ceheck credentials',error)
         }
     }
 
-   
+
 
     return (
         <div className="flex flex-col min-h-[50vh] h-full w-full items-center justify-center px-4">
