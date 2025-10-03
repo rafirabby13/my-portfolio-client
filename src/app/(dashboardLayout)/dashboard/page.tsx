@@ -3,13 +3,13 @@
 import { useSession } from 'next-auth/react'
 import React from 'react'
 
-const Dashboard =   () => {
-const { data: session } = useSession()
+const Dashboard = () => {
+    const { data: session } = useSession()
 
     console.log(session?.user)
     return (
         <div>
-            Dashboard
+            <h1 className="text-4xl">Hello, {session?.user?.name}</h1>
         </div>
     )
 }
