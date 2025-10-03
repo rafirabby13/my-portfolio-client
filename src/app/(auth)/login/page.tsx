@@ -58,11 +58,17 @@ export default function Login() {
 
             }
             console.log(data)
-            const response = await login(data)
+            // const response = await login(data)
             // console.log("response......", response)
-            if (response?.success) {
-                toast.success("user logged in successfully")
-            }
+            // if (response?.success) {
+            //     toast.success("user logged in successfully")
+            // }
+
+
+             signIn("credentials", {
+                ...data,
+                callbackUrl: "/dashboard"
+            })
       
           
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

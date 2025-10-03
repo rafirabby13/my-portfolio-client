@@ -33,7 +33,7 @@ export const authOptions = {
                     return null
                 }
 
-
+                console.log("backend eurl   ", process.env.NEXT_BACKEND_URL)
                 try {
                     const res = await fetch(`${process.env.NEXT_BACKEND_URL}/auth/login`, {
                         method: 'POST',
@@ -45,22 +45,23 @@ export const authOptions = {
                             password: credentials.password
                         })
                     })
-                    console.log("res from backend", res)
                     if (!res?.ok) {
                         console.log("Register user failed", await res.text())
                         return null
                     }
-
+                    
                     const user = await res.json()
+                    console.log("res from backend..........", user)
 
                     // return user
                     if (user) {
                         // Any object returned will be saved in `user` property of the JWT
                         return {
-                            id: user?.id,
-                            name: user?.name,
-                            email: user?.email,
-                            image: user?.image
+                            id: user?.user?.id,
+                            name: user?.user?.name,
+                            email: user?.user?.email,
+                            image: user?.user?.image,
+                            phone: user?.user?.phone
                         }
                     } else {
                         // If you return null then an error will be displayed advising the user to check their details.
