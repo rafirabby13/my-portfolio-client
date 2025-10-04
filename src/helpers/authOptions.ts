@@ -33,9 +33,9 @@ export const authOptions = {
                     return null
                 }
 
-                console.log("backend eurl   ", process.env.NEXT_BACKEND_URL)
+                console.log("backend eurl   ", process.env.NEXT_PUBLIC_BACKEND_URL)
                 try {
-                    const res = await fetch(`${process.env.NEXT_BACKEND_URL}/auth/login`, {
+                    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`, {
                         method: 'POST',
                         headers: {
                             "Content-Type": "application/json"

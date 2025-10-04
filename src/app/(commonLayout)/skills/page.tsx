@@ -7,9 +7,9 @@ import Marquee from "react-fast-marquee";
 const Skill = async () => {
 
 
-console.log("object", process.env.NEXT_BACKEND_URL)
+console.log("object", process.env.NEXT_PUBLIC_BACKEND_URL)
 
-  const res = await fetch(`${process.env.NEXT_BACKEND_URL}/skill`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/skill`, {
     next: { revalidate: 3600 }, // refresh every 1 hour
   });
   const skills = await res.json();

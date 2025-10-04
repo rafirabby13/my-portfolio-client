@@ -22,7 +22,7 @@ const DashboardLayout = async ({ children }: { children: ReactNode }) => {
                 {/* <div>
                     <Header />
                 </div> */}
-                <div className='flex-1 bg-red-900'>
+                <div className='flex-1 bg-background'>
                     {children}
                 </div>
             </div>
