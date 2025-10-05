@@ -1,9 +1,10 @@
-import NextAuth from "next-auth"
-import GithubProvider from "next-auth/providers/github"
+
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { email } from "zod";
+import { JWT } from "next-auth/jwt";
+import { Session } from "next-auth";
 
+ const baseUrl='http://localhost:3000'
 export const authOptions = {
     // Configure one or more authentication providers
     providers: [
@@ -49,7 +50,7 @@ export const authOptions = {
                         console.log("Register user failed", await res.text())
                         return null
                     }
-                    
+
                     const user = await res.json()
                     console.log("res from backend..........", user)
 
@@ -61,7 +62,8 @@ export const authOptions = {
                             name: user?.user?.name,
                             email: user?.user?.email,
                             image: user?.user?.image,
-                            phone: user?.user?.phone
+                            phone: user?.user?.phone,
+                            role: user?.user?.role
                         }
                     } else {
                         // If you return null then an error will be displayed advising the user to check their details.
@@ -82,9 +84,42 @@ export const authOptions = {
         })
     ],
     secret: process.env.AUTH_SECRET,
+    session: {
+        strategy: "jwt", // ✅ important
+    },
+
     pages: {
         signIn: '/login'
+    },
+    callbacks: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        async jwt({ token, user }: { token: JWT; user: any }) {
+            // Add user role to token when user signs in
+            if (user) {
+                token.id = user.id as string
+                token.role = user.role as string
+                token.phone = user.phone as string
+            }
+            return token
+        },
+        async session({ session, token }: { session: Session; token: JWT }) {
+            // Add role to session from token
+            if (session.user) {
+                session.user.id = token.id as string
+                session.user.role = token.role as string
+                session.user.phone = token.phone as string
+            }
+            return session
+        },
+       
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // async redirect({   token }:{ token: any }): Promise<string> {
+        //     // Redirect based on role
+        //     if (token?.role === "ADMIN") return `${baseUrl}/dashboard`;
+        //     return `${baseUrl}/`; // regular user
+        // },
     }
+
 }
 
 // export const handler = NextAuth(authOptions)

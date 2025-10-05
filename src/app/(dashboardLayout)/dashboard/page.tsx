@@ -5,13 +5,23 @@ import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { LogOut } from "lucide-react"
 import { signOut, useSession } from "next-auth/react"
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
 
 const Dashboard = () => {
   const { data: session } = useSession()
-  if (!session) {
-    return "Loading.............."
-  }
+  // if (!session) {
+  //   return "Loading.............."
+  // }
+  const router = useRouter();
   console.log(session)
+  useEffect(() => {
+    if (session && session.user.role !== "ADMIN") {
+      router.replace("/"); // redirect non-admin
+    }
+  }, [session, router]);
+
+  if (!session || session.user.role !== "ADMIN") return <p>Loading...</p>;
 
   return (
     <div className="min-h-screen w-full bg-gray-50 dark:bg-gray-900 p-8">

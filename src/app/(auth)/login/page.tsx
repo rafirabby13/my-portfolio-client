@@ -26,8 +26,9 @@ import {
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { FaGoogle } from 'react-icons/fa'
-import { signIn } from "next-auth/react"
+import { signIn, useSession } from "next-auth/react"
 import { login } from '@/actions/auth'
+import { useRouter } from 'next/navigation'
 
 // import { loginFormSchema } from '@/lib/validation-schemas'
 
@@ -41,14 +42,18 @@ const formSchema = z.object({
         .string()
         .min(6, { message: "Password must be at least 6 characters long" }),
 });
+type FormData = z.infer<typeof formSchema>;
 export default function Login() {
-    const form = useForm<FieldValues>({
+    const form = useForm<FormData>({
+        resolver: zodResolver(formSchema),
         defaultValues: {
             email: '',
             password: '',
         },
     })
-
+    const router = useRouter()
+    const { data: session } = useSession()
+    console.log("session.......login",session?.user?.role)
     async function onSubmit(values: FieldValues) {
         try {
             // Assuming an async login function
@@ -65,16 +70,31 @@ export default function Login() {
             // }
 
 
-             signIn("credentials", {
+            const result = await signIn("credentials", {
                 ...data,
-                callbackUrl: "/dashboard"
+                redirect: false
             })
-      
-          
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            if (result?.error) {
+                toast.error('Check credentials')
+                return
+            }
+            if (result?.ok) {
+                // Wait a moment for session to update
+                await new Promise(resolve => setTimeout(resolve, 100))
+
+
+
+                if (session?.user?.role === "ADMIN") {
+                    router.push("/dashboard")
+                } else {
+                    router.push("/")
+                }
+            }
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
-            
-            toast.error('Ceheck credentials',error)
+
+            toast.error('Ceheck credentials', error)
         }
     }
 

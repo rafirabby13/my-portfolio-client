@@ -122,7 +122,7 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
     const pathname = usePathname();
 
     const session = useSession()
-    // console.log(session.data.user)
+    console.log(session)
 
     useEffect(() => {
       const checkWidth = () => {
