@@ -1,5 +1,5 @@
 'use client';
-
+import Swal from 'sweetalert2'
 import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useEffect, useState, useRef } from 'react';
@@ -8,6 +8,12 @@ import { useEffect, useState, useRef } from 'react';
 import { Popover, PopoverContent, PopoverTrigger } from '../../popover';
 import { Button } from '../../button';
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from '../../navigation-menu';
+
+import Signature from '@/components/mini/Signature';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { signOut, useSession } from 'next-auth/react';
+import { Avatar, AvatarFallback } from '../../avatar';
 
 // Simple logo component for the navbar
 const Logo = (props: React.SVGAttributes<SVGElement>) => {
@@ -67,7 +73,7 @@ const HamburgerIcon = ({ className, ...props }: React.SVGAttributes<SVGElement>)
 
 // Types
 export interface Navbar03NavItem {
-  href?: string;
+  href: string;
   label: string;
   active?: boolean;
 }
@@ -86,12 +92,12 @@ export interface Navbar03Props extends React.HTMLAttributes<HTMLElement> {
 
 // Default navigation links
 const defaultNavigationLinks: Navbar03NavItem[] = [
-  { href: '#', label: 'Home', active: true },
-  { href: '#', label: 'About' },
-  { href: '#', label: 'Blog' },
-  { href: '#', label: 'Skills' },
-  { href: '#', label: 'Projects' },
-  { href: '#', label: 'Dashboard' },
+  { href: '/', label: 'Home', active: true },
+  { href: 'about', label: 'About' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/skills', label: 'Skills' },
+  { href: 'projects', label: 'Projects' },
+  { href: '/dashboard', label: 'Dashboard' },
 ];
 
 export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
@@ -113,6 +119,10 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
   ) => {
     const [isMobile, setIsMobile] = useState(false);
     const containerRef = useRef<HTMLElement>(null);
+    const pathname = usePathname();
+
+    const session = useSession()
+    console.log(session)
 
     useEffect(() => {
       const checkWidth = () => {
@@ -134,6 +144,30 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
       };
     }, []);
 
+
+    const handleSignout=()=>{
+       Swal.fire({
+      title: "Are you sure?",
+      text: "You will be logged out of your account.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, logout!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        signOut({ callbackUrl: "/" }) // redirects to home after logout
+        Swal.fire({
+          title: "Logged out!",
+          text: "You have been successfully logged out.",
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false,
+        })
+      }
+    })
+    }
+
     // Combine refs
     const combinedRef = React.useCallback((node: HTMLElement | null) => {
       containerRef.current = node;
@@ -147,12 +181,12 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
       <header
         ref={combinedRef}
         className={cn(
-          'sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 md:px-6 [&_*]:no-underline',
+          'sticky top-0 z-50 w-full border-b py-5  backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 md:px-6 [&_*]:no-underline',
           className
         )}
         {...props}
       >
-        <div className="container mx-auto flex h-16 max-w-screen-2xl items-center justify-between gap-4">
+        <div className="container mx-auto flex h-16 max-w-screen-2xl items-center justify-between gap-4 ">
           {/* Left side */}
           <div className="flex items-center gap-2">
             {/* Mobile menu trigger */}
@@ -194,16 +228,17 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                 onClick={(e) => e.preventDefault()}
                 className="flex items-center space-x-2 text-primary hover:text-primary/90 transition-colors cursor-pointer"
               >
-                <div className="text-2xl">
+                {/* <div className="text-2xl">
                   {logo}
-                </div>
-                <span className="hidden font-bold text-xl sm:inline-block">shadcn.io</span>
+                </div> */}
+                {/* <span className={`hidden font-bold text-xl sm:inline-block ${signature.className}`}>{'<R/>'}</span> */}
+                <Signature />
               </button>
               {/* Navigation menu */}
               {!isMobile && (
                 <NavigationMenu className="flex">
                   <NavigationMenuList className="gap-1">
-                    {navigationLinks.map((link, index) => (
+                    {/* {navigationLinks.map((link, index) => (
                       <NavigationMenuItem key={index}>
                         <NavigationMenuLink
                           href={link.href}
@@ -218,7 +253,33 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                           {link.label}
                         </NavigationMenuLink>
                       </NavigationMenuItem>
-                    ))}
+                    ))} */}
+                    {navigationLinks.map((link, index) => {
+                      const isActive = pathname === link.href;
+
+                      return (
+                        <NavigationMenuItem key={index}>
+                          <Link href={link.href} passHref className={cn(
+                            'group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 cursor-pointer relative',
+                            'before:absolute before:bottom-0 before:left-0 before:right-0 before:h-0.5 before:bg-primary before:scale-x-0 before:transition-transform before:duration-300 hover:before:scale-x-100',
+                            isActive && 'before:scale-x-100 text-primary'
+                          )}>
+                            {/* <NavigationMenuLink
+
+
+                              className={cn(
+                                'group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 cursor-pointer relative',
+                                'before:absolute before:bottom-0 before:left-0 before:right-0 before:h-0.5 before:bg-primary before:scale-x-0 before:transition-transform before:duration-300 hover:before:scale-x-100',
+                                isActive && 'before:scale-x-100 text-primary'
+                              )}
+                              data-active={isActive}
+                            >
+                            </NavigationMenuLink> */}
+                            <span>      {link.label}</span>
+                          </Link>
+                        </NavigationMenuItem>
+                      );
+                    })}
                   </NavigationMenuList>
                 </NavigationMenu>
               )}
@@ -226,18 +287,39 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
           </div>
           {/* Right side */}
           <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-sm font-medium hover:bg-accent hover:text-accent-foreground"
-              onClick={(e) => {
-                e.preventDefault();
-                if (onSignInClick) onSignInClick();
-              }}
-            >
-              {signInText}
-            </Button>
-            <Button
+
+
+            {
+              session?.data?.user ?
+                <div className='flex items-center gap-2'>
+                    <Avatar className="h-10 w-10 border-2 border-primary ">
+                      <AvatarFallback>{session?.data?.user?.name?.[0] ?? "U"}</AvatarFallback>
+                    </Avatar>
+                 
+                    <Button
+                      // variant="ghost"
+                      size="sm"
+                      className="text-sm font-medium hover:bg-accent hover:text-accent-foreground"
+                      onClick={handleSignout}
+
+                    >
+                      Logout
+                    </Button>
+            
+                </div>
+                :
+                <Link href={'/login'}>
+                  <Button
+                    // variant="ghost"
+                    size="sm"
+                    className="text-sm font-medium hover:bg-accent hover:text-accent-foreground"
+
+                  >
+                    {signInText}
+                  </Button>
+                </Link>
+            }
+            {/* <Button
               size="sm"
               className="text-sm font-medium px-4 h-9 rounded-md shadow-sm"
               onClick={(e) => {
@@ -246,7 +328,7 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
               }}
             >
               {ctaText}
-            </Button>
+            </Button> */}
           </div>
         </div>
       </header>
